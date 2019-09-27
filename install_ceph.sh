@@ -87,3 +87,31 @@ ceph-deploy install ceph-admin mon1 osd1
 
 #Deploy initial monitor
 ceph-deploy mon create-initial
+
+ceph-deploy ceph-admin mon1 osd1
+
+ceph-deploy mgr create mon1
+
+ceph-deploy osd create --data /dev/sdb mon1
+
+ceph-deploy osd create --data /dev/sdb osd1
+
+#Will return a warning even though we had 14 gigs free, seems it's calibrated for cloud values lol
+ssh mon1 sudo ceph health
+
+#Create an Metadata server on the mon1 node
+ceph-deploy mds create mon1
+
+#Run this command on all nodes otherwise 'ceph' commands will fail
+sudo chmod 644 /etc/ceph/ceph.client.admin.keyring
+
+#This is to specify placement group numbers which is a mandatory requirement. For less than 5 OSDs, it is 128 
+ceph osd pool create mytest 128
+
+rados put test-object-1  ./textfile.txt --pool=mytest
+
+rados -p mytest ls
+
+#Idenitifies the object location
+ceph osd map mytest test-object1
+
