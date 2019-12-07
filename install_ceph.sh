@@ -33,6 +33,7 @@ sudo echo -e \
 "10.0.0.128 ceph-admin\n\
 10.0.0.129 mon1\n\
 10.0.0.130 osd1\n"\
+"10.0.0.169 osd7\n"\
 >> ~/etc/hosts
 
 ssh-keygen
@@ -46,12 +47,16 @@ Host mon1\n\
    User cent\n\
 Host osd1\n\
    Hostname osd1\n\
+   User cent\n\
+Host osd7\n\
+   Hostname osd7\n\
    User cent\n" \
 > ~/.ssh/config 
 
 chmod 644 ~/.ssh/config
 ssh-copy-id mon1
 ssh-copy-id osd1
+ssh-copy-id osd7
 
 #On monitor node
 hostnamectl set-hostname mon1
@@ -83,18 +88,20 @@ public network = 10.0.0.1/24
 osd pool default size = 2
 
 #Install ceph on all nodes (I skipped ceph-admin, should probably include it)
-ceph-deploy install ceph-admin mon1 osd1
+ceph-deploy install ceph-admin mon1 osd1 osd7
 
 #Deploy initial monitor
 ceph-deploy mon create-initial
 
-ceph-deploy ceph-admin mon1 osd1
+ceph-deploy admin ceph-admin mon1 osd1 osd7
 
 ceph-deploy mgr create mon1
 
 ceph-deploy osd create --data /dev/sdb mon1
 
 ceph-deploy osd create --data /dev/sdb osd1
+
+ceph-deploy osd create --data /dev/sdb osd7
 
 #Will return a warning even though we had 14 gigs free, seems it's calibrated for cloud values lol
 ssh mon1 sudo ceph health
@@ -105,6 +112,22 @@ ceph-deploy mds create mon1
 #Run this command on all nodes otherwise 'ceph' commands will fail
 sudo chmod 644 /etc/ceph/ceph.client.admin.keyring
 
+#Installing CephFS
+ceph osd pool create cephfs_data 32
+ceph osd pool create cephfs_meta 32
+ceph fs new mycephfs cephfs_meta cephfs_data
+
+#Optional : If OSDs are < 3
+ceph osd pool set cephfs_data size 2
+ceph osd pool set cephfs_meta size 2
+
+sudo yum install ceph-fuse
+
+sudo mkdir /mnt/cephfs
+sudo ceph-fuse /mnt/cephfs
+
+# -----------------------------------
+
 #This is to specify placement group numbers which is a mandatory requirement. For less than 5 OSDs, it is 128 
 ceph osd pool create mytest 128
 
@@ -114,4 +137,3 @@ rados -p mytest ls
 
 #Idenitifies the object location
 ceph osd map mytest test-object1
-
