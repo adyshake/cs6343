@@ -19,7 +19,7 @@ sudo yum install openssh-server
 # Add a user for Ceph admin on all nodes
 adduser cent
 passwd cent
-usermod -aG wheel username
+usermod -aG wheel cent
 echo -e 'cent ALL = (root) NOPASSWD:ALL' | tee /etc/sudoers.d/cent
 chmod 0440 /etc/sudoers.d/cent
 firewall-cmd --add-service=ssh --permanent
