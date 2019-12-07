@@ -34,7 +34,7 @@ sudo echo -e \
 10.0.0.129 mon1\n\
 10.0.0.130 osd1\n"\
 "10.0.0.169 osd7\n"\
->> ~/etc/hosts
+>> /etc/hosts
 
 ssh-keygen
 
