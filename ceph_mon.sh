@@ -2,7 +2,7 @@
 //----------------Create new filesystem---------------------
 
 ceph osd pool create demo_cephfs_data 128
-ceph osd pool create demo_cephfs_meta 128
+ceph osd pool create demo_cephfs_meta 64
 
 //3 -> demo_cephfs_data
 //4 -> demo_cephfs_meta
