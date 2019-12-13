@@ -63,7 +63,7 @@ ceph fs ls
 
 //Delete file system
 systemctl stop ceph-mds.target
-ceph mds fail 0 && ceph fs rm cepfs_data --yes-i-really-mean-it
+ceph mds fail 0 && ceph fs rm cephfs --yes-i-really-mean-it
 systemctl start ceph-mds.target
 
 //Verify its gone
