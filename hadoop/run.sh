@@ -1,3 +1,7 @@
+# Start hadoop services first
+start-yarn.sh
+start-dfs.sh
+
 # Remove input directory
 # hadoop fs -rm -r input_dir/
 
