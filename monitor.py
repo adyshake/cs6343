@@ -108,6 +108,8 @@ print(rebalanceSet)
 
 deltaOSDMap = {}
 
+# Empirical data tells me that it takes about 34 iterations of 15s = 510s = 8.5 minutes before
+# a rebalance occurs
 def checkIfPlacementGroupChanged():
     rebalanceList = list(rebalanceSet)
     for objectID in rebalanceList:
@@ -118,7 +120,6 @@ def checkIfPlacementGroupChanged():
             print("Old list is: " + str(curState))
             if (collections.Counter(curState) != collections.Counter(osdList)):
                 print('Object has been migrated!')
-                # TODO - Make this more accurate
                 # rebalJSON['from'] contains old downed. deltaOSDMap has whatever was left alive.
                 # osdList contains the fresh osd list data
                 # So, toOSD = osdList - deltaOSDMap[objectID]
