@@ -18,9 +18,9 @@ start-dfs.sh
 hadoop fs -rm -r output_dir/
 
 #Compile and run program
-sudo javac -classpath hadoop-core-1.2.1.jar -d region RegionCrimeCount.java
-sudo jar -cvf region.jar -C region/ .
-hadoop jar region.jar hadoop.RegionCrimeCount input_dir output_dir
+sudo javac -classpath hadoop-core-1.2.1.jar -d crime CrimeCount.java
+sudo jar -cvf crime.jar -C crime/ .
+hadoop jar crime.jar hadoop.CrimeCount input_dir output_dir
 
 
 # Check output

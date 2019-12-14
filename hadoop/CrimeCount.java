@@ -9,7 +9,7 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 
-public class RegionCrimeCount {
+public class CrimeCount {
 
   public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
     private final static IntWritable one = new IntWritable(1);
@@ -45,8 +45,8 @@ public class RegionCrimeCount {
   }
 
   public static void main(String[] args) throws Exception {
-    JobConf conf = new JobConf(RegionCrimeCount.class);
-    conf.setJobName("RegionCrimeCount");
+    JobConf conf = new JobConf(CrimeCount.class);
+    conf.setJobName("CrimeCount");
 
     conf.setOutputKeyClass(Text.class);
     conf.setOutputValueClass(IntWritable.class);
@@ -54,8 +54,7 @@ public class RegionCrimeCount {
     conf.setMapperClass(Map.class);
     conf.setCombinerClass(Reduce.class);
     conf.setReducerClass(Reduce.class);
-	//conf.setNumReduceTasks(7);
-	
+    	
     conf.setInputFormat(TextInputFormat.class);
     conf.setOutputFormat(TextOutputFormat.class);
 
